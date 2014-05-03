@@ -114,6 +114,10 @@ function drawScene() {
 	gl.bindTexture(gl.TEXTURE_2D, videoTexture);
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoImage);
 	videoTexture.needsUpdate = false;	
+	
+	// lightness
+	var floatLightness = parseFloat(document.getElementById('lightness').value);
+	gl.uniform1f(shader.FloatUniform, floatLightness);
 		
 	gl.uniform1i(shader.SamplerUniform, 0);
 	gl.enableVertexAttribArray(shader.vertexPositionAttribute);
@@ -175,6 +179,7 @@ function webGLStart() {
 	shader.vertexPositionAttribute 	= gl.getAttribLocation(shader, "aVertexPosition");
 	shader.vertexTextAttribute 		= gl.getAttribLocation(shader, "aVertexTexture");
 	shader.SamplerUniform	 		= gl.getUniformLocation(shader, "uSampler");
+	shader.FloatUniform	 			= gl.getUniformLocation(shader, "lightness");
 
 	if ( 	(shader.vertexPositionAttribute < 0) ||
 			(shader.vertexTextAttribute < 0) ||
@@ -201,5 +206,3 @@ function render() {
 	}
 	drawScene();
 }
-
-
