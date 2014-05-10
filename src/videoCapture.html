@@ -23,119 +23,98 @@
 	uniform float lightness;
 	
 	varying vec2 vTextureCoord;
-		
-	void main(void) {	
-		vec4 c = texture2D(uSampler, vTextureCoord);
-		
-		/*
-		* 	RGB values range from 0 to 255.
-		* 	Hue ranges from 0° to 360°.
-		*	Saturation ranges from 0 to 1.
-		*	Lightness ranges from 0 to 1.
-		*/
-		
-		// http://www.had2know.com/technology/hsl-rgb-color-converter.html
-		// mapeia de [0..1] para [0..255]
-		float r = 255.0 * c.r;
-		float g = 255.0 * c.g;
-		float b = 255.0 * c.b;
-		
-		/********* RGB to HSL *********/
-		//max
-		float max = r;
-		if(g > max){
-			max = g;
-		}
-		if(b > max){
-			max = b;
+
+    vec3 rgbToHSL(vec3 corRGB);
+    vec3 hslToRGB(vec3 corHSL);
+
+	void main(void) {
+		vec4 cor = texture2D(uSampler, vTextureCoord);
+
+        // cor RGB de 0..1
+		vec3 corRGB = cor.rgb;
+
+        vec3 corHSL = rgbToHSL(corRGB);
+
+        corHSL[2] += lightness;
+
+        corRGB = hslToRGB(corHSL);
+
+		gl_FragColor = vec4(corRGB, 1.0);
+	}
+
+	vec3 rgbToHSL(vec3 corRGB){
+	    vec3 corHSL;
+
+	    float R = corRGB.r;
+	    float G = corRGB.g;
+	    float B = corRGB.b;
+
+        float corMax = max(max(R, G), B);
+        float corMin = min(max(R, G), B);
+
+        float delta = corMax - corMin;
+
+        // Hue
+        float H;
+        if(corMax == R){
+            H = 60.0 * mod((G-B)/delta, 6.0);
+        }else if(corMax == G){
+            H = 60.0 * ( ((B - R)/delta) + 2.0 );
+        }else if(corMax == B){
+            H = 60.0 * ( ((R - B)/delta) + 4.0 );
+        }
+
+        // Lightness
+        float L = (corMax + corMin) / 2.0;
+
+        // Saturation
+        float S;
+        if(delta == 0.0){
+            S = 0.0;
+        }else if(delta != 0.0){
+            S = delta / (1.0 - abs((2.0*L) - 1.0));
+        }
+
+        corHSL[0] = H;
+        corHSL[1] = S;
+        corHSL[2] = L;
+
+        return corHSL;
+	}
+
+    vec3 hslToRGB(vec3 corHSL){
+        vec3 corRGB;
+
+        float H = corHSL.x;
+        float S = corHSL.y;
+        float L = corHSL.z;
+
+        float C = (1.0 - abs((2.0*L) - 1.0)) * S;
+
+        float X = C * (1.0 - abs( mod(H/60.0,2.0) - 1.0) );
+
+        float m = L - (C/2.0);
+
+        if(H >= 0.0 && H < 60.0){
+            corRGB = vec3(C, X, 0.0);
+		}else if(H >= 60.0 && H < 120.0){
+			corRGB = vec3(X, C, 0.0);
+		}else if(H >= 120.0 && H < 180.0){
+            corRGB = vec3(0.0, C, X);
+		}else if(H >= 180.0 && H < 240.0){
+            corRGB = vec3(0.0, X, C);
+		}else if(H >= 240.0 && H < 300.0){
+            corRGB = vec3(X, 0.0, C);
+		}else if(H >= 300.0 && H < 360.0){
+            corRGB = vec3(C, 0.0, X);
 		}
 
-		// min
-		float min = r;
-		if(g < min){
-			min = g;
-		}
-		if(b < min){
-			min = b;
-		}
-		
-		float d = (max - min)/255.0;
-		
-		// Lightness
-		float L = (max + min)/510.0;
-		
-		// Saturation
-		float S;
-		if(L > 0.0){
-			S = d/(1.0 - abs((2.0*L)-1.0));
-		}
-		if(L == 0.0){
-			S = 0.0;
-		}
-		
-		// Hue
-		float H;
-		if(g >= b){
-			H = 1.0 / cos( (r - (g/2.0) - (b/2.0)) / sqrt(pow(r,2.0) + pow(g,2.0) + pow(b,2.0) - (r*g) - (r*b) - (g*b)) );
-		}else if(b > g){
-			H = 360.0 - (1.0 / cos( (r - (g/2.0) - (b/2.0)) / sqrt(pow(r,2.0) + pow(g,2.0) + pow(b,2.0) - (r*g) - (r*b) - (g*b)) ));
-		}
-		
-		// altera o brilho
-		L += lightness;
-		
-		/************************ HSL to RGB *********************/
-		
-		d = S * (1.0 - abs((2.0*L)-1.0));
-		float m = 255.0 * (L - (d/2.0));
-		
-		// x = d[1 - |(H/60)mod_2 - 1|]
-		float x = d * (1.0 - abs(mod((H/60.0),2.0) - 1.0));
-		
-		if(H>=0.0 && H < 60.0){
-			r = (255.0 * d) + m;
-			g = (255.0 * x) + m;
-			b = m;
-		}
-		
-		if(H>=60.0 && H < 120.0){
-			r = (255.0 * x) + m;
-			g = (255.0 * d) + m;
-			b = m;
-		}
-		
-		if(H>=120.0 && H < 180.0){
-			r = m;
-			g = (255.0 * d) + m;
-			b = (255.0 * x) + m;
-		}
-		
-		if(H>=180.0 && H < 240.0){
-			r = m;
-			g = (255.0 * x) + m;
-			b = (255.0 * d) + m;
-		}
-		
-		if(H>=240.0 && H < 300.0){
-			r = (255.0 * x) + m;
-			g = m;
-			b = (255.0 * d) + m;
-		}
-		
-		if(H>=300.0 && H < 360.0){
-			r = (255.0 * d) + m;
-			g = m;
-			b = (255.0 * x) + m;
-		}
-		
-		r = r/255.0;
-		g = g/255.0;
-		b = b/255.0;
-		
-		// aplica a cor convertida
-		gl_FragColor = vec4(r, g, b, 1.0);
+        corRGB.r += m;
+        corRGB.g += m;
+        corRGB.b += m;
+
+		return corRGB;
 	}
-		
 		
 </script>
 
@@ -148,7 +127,8 @@
 <body onload="webGLStart();">
     <h1>Trabalho</h1><br />
     <p>Captura e manipulação de video em WebGL.</p>
-	Lightness
+
+    <label for="lightness" >Lightness</label> <br />
 	0<input type="range" id="lightness" min="0" max="1" step="0.1" value="0">1.0
     <br/>
     <div id="output"> </div>
