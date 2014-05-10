@@ -1,0 +1,14 @@
+.videos {
+    display: inline-block;
+}
+
+#adjustments{
+    display: inline-block;
+    position: absolute;
+    bottom: auto;
+    margin-left: 10px;
+}
+
+input {
+    margin-top: 14px;
+}

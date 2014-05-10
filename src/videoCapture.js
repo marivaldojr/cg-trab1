@@ -18,7 +18,7 @@ function gotStream(stream)  {
 		}
 
 	video.onerror = function(e) {   
-							stream.stop();   
+							stream.stop();
 							};
 	stream.onended = noStream;
 }
@@ -115,10 +115,14 @@ function drawScene() {
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoImage);
 	videoTexture.needsUpdate = false;	
 	
-	// lightness
-	var floatLightness = parseFloat(document.getElementById('lightness').value);
-	gl.uniform1f(shader.FloatUniform, floatLightness);
-		
+	// Lightness
+	var lightness = parseFloat(document.getElementById('lightness').value);
+	gl.uniform1f(shader.FloatLightnessUniform, lightness);
+
+	// Saturation
+	var saturation = parseFloat(document.getElementById('saturation').value);
+	gl.uniform1f(shader.FloatSaturationUniform, saturation);
+
 	gl.uniform1i(shader.SamplerUniform, 0);
 	gl.enableVertexAttribArray(shader.vertexPositionAttribute);
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertPosBuf);
@@ -179,7 +183,8 @@ function webGLStart() {
 	shader.vertexPositionAttribute 	= gl.getAttribLocation(shader, "aVertexPosition");
 	shader.vertexTextAttribute 		= gl.getAttribLocation(shader, "aVertexTexture");
 	shader.SamplerUniform	 		= gl.getUniformLocation(shader, "uSampler");
-	shader.FloatUniform	 			= gl.getUniformLocation(shader, "lightness");
+	shader.FloatLightnessUniform	= gl.getUniformLocation(shader, "lightness");
+	shader.FloatSaturationUniform	= gl.getUniformLocation(shader, "saturation");
 
 	if ( 	(shader.vertexPositionAttribute < 0) ||
 			(shader.vertexTextAttribute < 0) ||

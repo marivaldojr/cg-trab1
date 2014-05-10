@@ -1,141 +1,159 @@
 <html>
 
 <head>
-<title>MATA65 - Computação Gráfica</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>MATA65 - Computação Gráfica</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-<script id="shader-vs" type="x-shader/x-vertex">
-	attribute vec3 aVertexPosition;
-	attribute vec2 aVertexTexture;
-		
-	varying vec2 vTextureCoord;
-	
-	void main(void) {
-		gl_Position = vec4(aVertexPosition, 1.0);
-		vTextureCoord = aVertexTexture;
-	}
-</script>
+    <link rel="stylesheet" type="text/css" href="questao1.css" />
 
-<script id="shader-fs" type="x-shader/x-fragment">
-	precision mediump float;
-		
-	uniform sampler2D uSampler;
-	uniform float lightness;
-	
-	varying vec2 vTextureCoord;
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        attribute vec2 aVertexTexture;
 
-    vec3 rgbToHSL(vec3 corRGB);
-    vec3 hslToRGB(vec3 corHSL);
+        varying vec2 vTextureCoord;
 
-	void main(void) {
-		vec4 cor = texture2D(uSampler, vTextureCoord);
+        void main(void) {
+            gl_Position = vec4(aVertexPosition, 1.0);
+            vTextureCoord = aVertexTexture;
+        }
+    </script>
 
-        // cor RGB de 0..1
-		vec3 corRGB = cor.rgb;
+    <script id="shader-fs" type="x-shader/x-fragment">
+        precision mediump float;
 
-        vec3 corHSL = rgbToHSL(corRGB);
+        uniform sampler2D uSampler;
+        uniform float lightness;
+        uniform float saturation;
 
-        corHSL[2] += lightness;
+        varying vec2 vTextureCoord;
 
-        corRGB = hslToRGB(corHSL);
+        vec3 rgbToHSL(vec3 corRGB);
+        vec3 hslToRGB(vec3 corHSL);
 
-		gl_FragColor = vec4(corRGB, 1.0);
-	}
+        void main(void) {
+            vec4 cor = texture2D(uSampler, vTextureCoord);
 
-	vec3 rgbToHSL(vec3 corRGB){
-	    vec3 corHSL;
+            // cor RGB de 0..1
+            vec3 corRGB = cor.rgb;
 
-	    float R = corRGB.r;
-	    float G = corRGB.g;
-	    float B = corRGB.b;
+            vec3 corHSL = rgbToHSL(corRGB);
 
-        float corMax = max(max(R, G), B);
-        float corMin = min(max(R, G), B);
+            corHSL[1] += saturation;
+            corHSL[2] += lightness;
 
-        float delta = corMax - corMin;
+            corRGB = hslToRGB(corHSL);
 
-        // Hue
-        float H;
-        if(corMax == R){
-            H = 60.0 * mod((G-B)/delta, 6.0);
-        }else if(corMax == G){
-            H = 60.0 * ( ((B - R)/delta) + 2.0 );
-        }else if(corMax == B){
-            H = 60.0 * ( ((R - B)/delta) + 4.0 );
+            gl_FragColor = vec4(corRGB, 1.0);
         }
 
-        // Lightness
-        float L = (corMax + corMin) / 2.0;
+        vec3 rgbToHSL(vec3 corRGB){
+            vec3 corHSL;
 
-        // Saturation
-        float S;
-        if(delta == 0.0){
-            S = 0.0;
-        }else if(delta != 0.0){
-            S = delta / (1.0 - abs((2.0*L) - 1.0));
+            float R = corRGB.r;
+            float G = corRGB.g;
+            float B = corRGB.b;
+
+            float corMax = max(max(R, G), B);
+            float corMin = min(max(R, G), B);
+
+            float delta = corMax - corMin;
+
+            // Hue
+            float H;
+            if(corMax == R){
+                H = 60.0 * mod((G - B)/delta, 6.0);
+            }else if(corMax == G){
+                H = 60.0 * ( ((B - R)/delta) + 2.0 );
+            }else if(corMax == B){
+                H = 60.0 * ( ((R - G)/delta) + 4.0 );
+            }
+
+            // Lightness
+            float L = (corMax + corMin) / 2.0;
+
+            // Saturation
+            float S;
+            if(delta == 0.0){
+                S = 0.0;
+            }else if(delta != 0.0){
+                S = delta / (1.0 - abs((2.0*L) - 1.0));
+            }
+
+            corHSL[0] = H;
+            corHSL[1] = S;
+            corHSL[2] = L;
+
+            return corHSL;
         }
 
-        corHSL[0] = H;
-        corHSL[1] = S;
-        corHSL[2] = L;
+        vec3 hslToRGB(vec3 corHSL){
+            vec3 corRGB;
 
-        return corHSL;
-	}
+            float H = corHSL.x;
+            float S = corHSL.y;
+            float L = corHSL.z;
 
-    vec3 hslToRGB(vec3 corHSL){
-        vec3 corRGB;
+            float C = (1.0 - abs((2.0*L) - 1.0)) * S;
 
-        float H = corHSL.x;
-        float S = corHSL.y;
-        float L = corHSL.z;
+            float X = C * (1.0 - abs( mod(H/60.0,2.0) - 1.0) );
 
-        float C = (1.0 - abs((2.0*L) - 1.0)) * S;
+            float m = L - (C/2.0);
 
-        float X = C * (1.0 - abs( mod(H/60.0,2.0) - 1.0) );
+            if(H >= 0.0 && H < 60.0){
+                corRGB = vec3(C, X, 0.0);
+            }else if(H >= 60.0 && H < 120.0){
+                corRGB = vec3(X, C, 0.0);
+            }else if(H >= 120.0 && H < 180.0){
+                corRGB = vec3(0.0, C, X);
+            }else if(H >= 180.0 && H < 240.0){
+                corRGB = vec3(0.0, X, C);
+            }else if(H >= 240.0 && H < 300.0){
+                corRGB = vec3(X, 0.0, C);
+            }else if(H >= 300.0 && H < 360.0){
+                corRGB = vec3(C, 0.0, X);
+            }
 
-        float m = L - (C/2.0);
+            corRGB.r += m;
+            corRGB.g += m;
+            corRGB.b += m;
 
-        if(H >= 0.0 && H < 60.0){
-            corRGB = vec3(C, X, 0.0);
-		}else if(H >= 60.0 && H < 120.0){
-			corRGB = vec3(X, C, 0.0);
-		}else if(H >= 120.0 && H < 180.0){
-            corRGB = vec3(0.0, C, X);
-		}else if(H >= 180.0 && H < 240.0){
-            corRGB = vec3(0.0, X, C);
-		}else if(H >= 240.0 && H < 300.0){
-            corRGB = vec3(X, 0.0, C);
-		}else if(H >= 300.0 && H < 360.0){
-            corRGB = vec3(C, 0.0, X);
-		}
+            return corRGB;
+        }
 
-        corRGB.r += m;
-        corRGB.g += m;
-        corRGB.b += m;
+    </script>
 
-		return corRGB;
-	}
-		
-</script>
-
-<script type="text/javascript" src="../lib/webgl-utils.js"></script>
-<script type="text/javascript" src="../lib/shaders.js"></script>
-<script type="text/javascript" src="videoCapture.js"></script>
+    <script type="text/javascript" src="../lib/webgl-utils.js"></script>
+    <script type="text/javascript" src="../lib/shaders.js"></script>
+    <script type="text/javascript" src="videoCapture.js"></script>
 
 </head>
 
 <body onload="webGLStart();">
+
     <h1>Trabalho</h1><br />
     <p>Captura e manipulação de video em WebGL.</p>
 
-    <label for="lightness" >Lightness</label> <br />
-	0<input type="range" id="lightness" min="0" max="1" step="0.1" value="0">1.0
-    <br/>
-    <div id="output"> </div>
-    <br/>
-	<canvas id="videoGL" width="320" height="240" style="visibility: visible;"></canvas>
-	<video id="monitor" autoplay width="320" height="240" style="visibility: hidden;"></video>
-	<canvas id="videoImage" width="256" height="256" style="visibility: hidden;"></canvas>
+    <div id="content">
+        <!-- <div id="output"> </div> -->
+        <div class="videos">
+            <canvas id="videoGL" width="320" height="240" style="visibility: visible;"></canvas>
+            <video id="monitor" autoplay width="320" height="240" style="visibility: hidden; display: none"></video>
+            <canvas id="videoImage" width="256" height="256" style="visibility: hidden; display: none"></canvas>
+        </div>
+
+        <form id="adjustments">
+            <label for="lightness" >Lightness</label> <br />
+            <input type="range" id="lightness" min="0" max="1" step="0.1" value="0" oninput="this.form.lightnessOutput.value=this.value">
+            <output name="lightnessOutput" for="rangeInput">0</output>
+            <br/>
+
+            <label for="saturation" >Saturation</label> <br />
+            <input type="range" id="saturation" min="0" max="1" step="0.1" value="0" oninput="this.form.saturationOutput.value=this.value">
+            <output name="saturationOutput" for="rangeInput">0</output>
+            <br/>
+        </form>
+    </div>
+
 </body>
 
 </html>
