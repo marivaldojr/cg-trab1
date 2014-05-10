@@ -54,7 +54,7 @@
             float B = corRGB.b;
 
             float corMax = max(max(R, G), B);
-            float corMin = min(max(R, G), B);
+            float corMin = min(min(R, G), B);
 
             float delta = corMax - corMin;
 
@@ -75,8 +75,8 @@
             float S;
             if(delta == 0.0){
                 S = 0.0;
-            }else if(delta != 0.0){
-                S = delta / (1.0 - abs((2.0*L) - 1.0));
+            }else {
+                S = delta / (1.0 - abs((2.0 * L) - 1.0));
             }
 
             corHSL[0] = H;
@@ -93,11 +93,11 @@
             float S = corHSL.y;
             float L = corHSL.z;
 
-            float C = (1.0 - abs((2.0*L) - 1.0)) * S;
+            float C = (1.0 - abs((2.0 * L) - 1.0)) * S;
 
-            float X = C * (1.0 - abs( mod(H/60.0,2.0) - 1.0) );
+            float X = C * (1.0 - abs(mod(H/60.0, 2.0) - 1.0) );
 
-            float m = L - (C/2.0);
+            float m = L - (C / 2.0);
 
             if(H >= 0.0 && H < 60.0){
                 corRGB = vec3(C, X, 0.0);
@@ -113,9 +113,9 @@
                 corRGB = vec3(C, 0.0, X);
             }
 
-            corRGB.r += m;
-            corRGB.g += m;
-            corRGB.b += m;
+            corRGB.r = corRGB.r + m;
+            corRGB.g = corRGB.g + m;
+            corRGB.b = corRGB.b + m;
 
             return corRGB;
         }
@@ -137,7 +137,7 @@
         <!-- <div id="output"> </div> -->
         <div class="videos">
             <canvas id="videoGL" width="320" height="240" style="visibility: visible;"></canvas>
-            <video id="monitor" autoplay width="320" height="240" style="visibility: hidden; display: none"></video>
+            <video id="monitor" autoplay width="320" height="240" style="visibility: visible; display: initial"></video>
             <canvas id="videoImage" width="256" height="256" style="visibility: hidden; display: none"></canvas>
         </div>
 
