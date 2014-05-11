@@ -123,6 +123,14 @@ function drawScene() {
 	var saturation = parseFloat(document.getElementById('saturation').value);
 	gl.uniform1f(shader.FloatSaturationUniform, saturation);
 
+    // Contrast
+	var contrast = parseFloat(document.getElementById('contrast').value);
+	gl.uniform1f(shader.FloatContrastUniform, contrast);
+
+    // Contrast - constant C
+    var contrastC = parseFloat(document.getElementById('contrastC').value);
+    gl.uniform1f(shader.FloatContrastCUniform, contrastC);
+
 	gl.uniform1i(shader.SamplerUniform, 0);
 	gl.enableVertexAttribArray(shader.vertexPositionAttribute);
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertPosBuf);
@@ -186,6 +194,8 @@ function webGLStart() {
 
 	shader.FloatLightnessUniform	= gl.getUniformLocation(shader, "lightness");
 	shader.FloatSaturationUniform	= gl.getUniformLocation(shader, "saturation");
+	shader.FloatContrastUniform	    = gl.getUniformLocation(shader, "contrast");
+	shader.FloatContrastCUniform	= gl.getUniformLocation(shader, "contrastC");
 
 	if ( 	(shader.vertexPositionAttribute < 0) ||
 			(shader.vertexTextAttribute < 0) ||
