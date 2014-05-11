@@ -33,6 +33,7 @@
 
         vec3 rgbToHSL(vec3 corRGB);
         vec3 hslToRGB(vec3 corHSL);
+        vec3 applyContrast(vec3 corRGB, float constant, float gamma);
 
         void main(void) {
             vec4 cor = texture2D(uSampler, vTextureCoord);
@@ -47,9 +48,7 @@
 
             corRGB = hslToRGB(corHSL);
 
-            corRGB.r = contrastC * pow(corRGB.r, contrast);
-            corRGB.g = contrastC * pow(corRGB.g, contrast);
-            corRGB.b = contrastC * pow(corRGB.b, contrast);
+            corRGB = applyContrast(corRGB, contrastC, contrast);
 
             gl_FragColor = vec4(corRGB, 1.0);
         }
@@ -124,6 +123,14 @@
             corRGB.r = corRGB.r + m;
             corRGB.g = corRGB.g + m;
             corRGB.b = corRGB.b + m;
+
+            return corRGB;
+        }
+
+        vec3 applyContrast(vec3 corRGB, float constant, float gamma){
+            corRGB.r = constant * pow(corRGB.r, gamma);
+            corRGB.g = constant * pow(corRGB.g, gamma);
+            corRGB.b = constant * pow(corRGB.b, gamma);
 
             return corRGB;
         }
