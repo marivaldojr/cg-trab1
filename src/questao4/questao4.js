@@ -102,7 +102,7 @@ var vTex = new Array;
 // ********************************************************
 // ********************************************************
 function drawScene() {
-	gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+	gl.viewport(0, gl.viewportHeight/2, gl.viewportWidth/2, gl.viewportHeight/2);
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	
 	if (!videoTexture.needsUpdate) 
@@ -113,15 +113,9 @@ function drawScene() {
 	gl.activeTexture(gl.TEXTURE0);
 	gl.bindTexture(gl.TEXTURE_2D, videoTexture);
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoImage);
-	videoTexture.needsUpdate = false;	
-	
-	// Lightness
-	var lightness = parseFloat(document.getElementById('lightness').value);
-	gl.uniform1f(shader.FloatLightnessUniform, lightness);
+	videoTexture.needsUpdate = false;
 
-	// Saturation
-	var saturation = parseFloat(document.getElementById('saturation').value);
-	gl.uniform1f(shader.FloatSaturationUniform, saturation);
+    gl.uniform1i(shader.IntFlagUniform, 0);
 
 	gl.uniform1i(shader.SamplerUniform, 0);
 	gl.enableVertexAttribArray(shader.vertexPositionAttribute);
@@ -133,6 +127,19 @@ function drawScene() {
 	gl.vertexAttribPointer(shader.vertexTextAttribute, vertTextBuf.itemSize, gl.FLOAT, false, 0, 0);
 
 	gl.drawArrays(gl.TRIANGLES, 0, vertPosBuf.numItems);
+
+    gl.viewport(gl.viewportWidth/2, gl.viewportHeight/2, gl.viewportWidth/2, gl.viewportHeight/2);
+    gl.uniform1i(shader.IntFlagUniform, 1);
+	gl.drawArrays(gl.TRIANGLES, 0, vertPosBuf.numItems);
+
+    gl.viewport(0, 0, gl.viewportWidth/2, gl.viewportHeight/2);
+    gl.uniform1i(shader.IntFlagUniform, 2);
+	gl.drawArrays(gl.TRIANGLES, 0, vertPosBuf.numItems);
+
+    gl.viewport(gl.viewportWidth/2, 0, gl.viewportWidth/2, gl.viewportHeight/2);
+    gl.uniform1i(shader.IntFlagUniform, 3);
+	gl.drawArrays(gl.TRIANGLES, 0, vertPosBuf.numItems);
+
 }
 
 // ********************************************************
@@ -183,8 +190,8 @@ function webGLStart() {
 	shader.vertexPositionAttribute 	= gl.getAttribLocation(shader, "aVertexPosition");
 	shader.vertexTextAttribute 		= gl.getAttribLocation(shader, "aVertexTexture");
 	shader.SamplerUniform	 		= gl.getUniformLocation(shader, "uSampler");
-	shader.FloatLightnessUniform	= gl.getUniformLocation(shader, "lightness");
-	shader.FloatSaturationUniform	= gl.getUniformLocation(shader, "saturation");
+
+    shader.IntFlagUniform	 		= gl.getUniformLocation(shader, "flagVideo");
 
 	if ( 	(shader.vertexPositionAttribute < 0) ||
 			(shader.vertexTextAttribute < 0) ||
@@ -206,8 +213,16 @@ function animate(gl, shader) {
 function render() {	
 	
 	if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
-		videoImageContext.drawImage( video, 0, 0, videoImage.width, videoImage.height );
-		videoTexture.needsUpdate = true;
+        try{
+            videoImageContext.drawImage( video, 0, 0, videoImage.width, videoImage.height );
+            videoTexture.needsUpdate = true;
+        }catch (e){
+            if (e.name == "NS_ERROR_NOT_AVAILABLE") {
+                console.log("ERROR: " + e.name);
+            } else {
+                throw e;
+            }
+        }
 	}
 	drawScene();
 }
