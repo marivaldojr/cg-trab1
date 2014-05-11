@@ -7,9 +7,12 @@
     position: absolute;
     bottom: auto;
     margin-left: 10px;
-    z-index: -1;
 }
 
 input {
     margin-top: 10px;
+}
+
+#cssmenu ul{
+    z-index: 1;
 }
