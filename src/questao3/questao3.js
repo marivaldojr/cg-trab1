@@ -18,7 +18,7 @@ function gotStream(stream)  {
 		}
 
 	video.onerror = function(e) {   
-							stream.stop();
+							stream.stop();   
 							};
 	stream.onended = noStream;
 }
@@ -109,38 +109,11 @@ function drawScene() {
 		return;
 	
    	gl.useProgram(shader);
-   	
+
 	gl.activeTexture(gl.TEXTURE0);
 	gl.bindTexture(gl.TEXTURE_2D, videoTexture);
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoImage);
-	videoTexture.needsUpdate = false;	
-	
-	gl.uniform2f(shader.TextureSizeUniform, gl.viewportWidth, gl.viewportHeight);
-	
-	// Lightness
-	var lightness = parseFloat(document.getElementById('lightness').value);
-	gl.uniform1f(shader.FloatLightnessUniform, lightness);
-
-	// Saturation
-	var saturation = parseFloat(document.getElementById('saturation').value);
-	gl.uniform1f(shader.FloatSaturationUniform, saturation);
-	
-	// Nitidez
-	var a = parseFloat(document.getElementById('nitidez').value);
-	var edgeDetectKernel = [
-		0, -1*a, 0,
-		-1*a, 1 + 4*a, -1*a,
-		0, -1*a, 0
-	];
-	gl.uniform1fv(shader.KernelLocationUniform, edgeDetectKernel);
-
-    // Contrast
-	var contrast = parseFloat(document.getElementById('contrast').value);
-	gl.uniform1f(shader.FloatContrastUniform, contrast);
-
-    // Contrast - constant C
-    var contrastC = parseFloat(document.getElementById('contrastC').value);
-    gl.uniform1f(shader.FloatContrastCUniform, contrastC);
+	videoTexture.needsUpdate = false;
 
 	gl.uniform1i(shader.SamplerUniform, 0);
 	gl.enableVertexAttribArray(shader.vertexPositionAttribute);
@@ -203,20 +176,6 @@ function webGLStart() {
 	shader.vertexTextAttribute 		= gl.getAttribLocation(shader, "aVertexTexture");
 	shader.SamplerUniform	 		= gl.getUniformLocation(shader, "uSampler");
 
-	shader.FloatLightnessUniform	= gl.getUniformLocation(shader, "lightness");
-	shader.FloatSaturationUniform	= gl.getUniformLocation(shader, "saturation");
-
-	shader.TextureSizeUniform		= gl.getUniformLocation(shader, "uTextureSize");
-	
-	shader.KernelLocationUniform	= gl.getUniformLocation(shader, "u_kernel[0]");
-
-	shader.FloatContrastUniform	    = gl.getUniformLocation(shader, "contrast");
-	shader.FloatContrastCUniform	= gl.getUniformLocation(shader, "contrastC");
-
-	shader.TextureSizeUniform		= gl.getUniformLocation(shader, "uTextureSize");
-	
-	shader.KernelLocationUniform	= gl.getUniformLocation(shader, "u_kernel[0]");
-
 	if ( 	(shader.vertexPositionAttribute < 0) ||
 			(shader.vertexTextAttribute < 0) ||
 			(shader.SamplerUniform < 0) ) {
@@ -250,3 +209,5 @@ function render() {
 	}
 	drawScene();
 }
+
+
