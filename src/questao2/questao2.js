@@ -17,12 +17,10 @@ function gotStream(stream)  {
 		video.src = stream;   
 		}
 
-	video.onerror = function(e) {   
-							stream.stop();   
-							};
+    video.onerror = function(e) {
         stream.stop();
     };
-	stream.onended = noStream;
+    stream.onended = noStream;
 }
 
 // ********************************************************
@@ -220,7 +218,6 @@ function webGLStart() {
 	shader.AngleUniform				= gl.getUniformLocation(shader, "uAngle");
 
 	if ( 	(shader.vertexPositionAttribute < 0) ||
-    if ( 	(shader.vertexPositionAttribute < 0) ||
 			(shader.vertexTextAttribute < 0) ||
 			(shader.SamplerUniform < 0) ) {
 		alert("Shader attribute ou uniform nao localizado!");
