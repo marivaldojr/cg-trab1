@@ -205,14 +205,14 @@ function webGLStart() {
 
 	shader.FloatLightnessUniform	= gl.getUniformLocation(shader, "lightness");
 	shader.FloatSaturationUniform	= gl.getUniformLocation(shader, "saturation");
-<<<<<<< HEAD:src/videoCapture.js
+	
 	shader.TextureSizeUniform		= gl.getUniformLocation(shader, "uTextureSize");
 	
 	shader.KernelLocationUniform	= gl.getUniformLocation(shader, "u_kernel[0]");
-=======
+
 	shader.FloatContrastUniform	    = gl.getUniformLocation(shader, "contrast");
 	shader.FloatContrastCUniform	= gl.getUniformLocation(shader, "contrastC");
->>>>>>> FETCH_HEAD:src/questao1/questao1.js
+
 
 	if ( 	(shader.vertexPositionAttribute < 0) ||
 			(shader.vertexTextAttribute < 0) ||
