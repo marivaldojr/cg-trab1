@@ -2,8 +2,11 @@ var vertPosBuf;
 var vertTextBuf;
 var gl;
 var shader;
+<<<<<<< HEAD
 var centerX;
 var centerY;
+=======
+>>>>>>> FETCH_HEAD
 
 var video, videoImage, videoImageContext, videoTexture;
 
@@ -20,8 +23,13 @@ function gotStream(stream)  {
 		}
 
 	video.onerror = function(e) {   
+<<<<<<< HEAD
 							stream.stop();   
 							};
+=======
+        stream.stop();
+    };
+>>>>>>> FETCH_HEAD
 	stream.onended = noStream;
 }
 
@@ -55,6 +63,7 @@ function initGL(canvas) {
 // ********************************************************
 // ********************************************************
 function initBuffers(gl) {
+<<<<<<< HEAD
 var vPos = new Array;
 var vTex = new Array;
 
@@ -76,12 +85,33 @@ var vTex = new Array;
 	vPos.push(-1.0);	// V3
 	vPos.push( 1.0);
 	vPos.push( 0.0);
+=======
+    var vPos = new Array;
+    var vTex = new Array;
+
+    vPos = [
+        // right triangle
+        -1.0, -1.0, 0.0, // V0
+         1.0, -1.0, 0.0, // V1
+         1.0,  1.0, 0.0,  // V2
+
+        // left triangle
+        -1.0, -1.0, 0.0,  // V0
+         1.0,  1.0, 0.0,  // V2
+        -1.0,  1.0, 0.0   // V3
+    ];
+
+>>>>>>> FETCH_HEAD
 	vertPosBuf = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertPosBuf);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vPos), gl.STATIC_DRAW);
 	vertPosBuf.itemSize = 3;
 	vertPosBuf.numItems = vPos.length/vertPosBuf.itemSize;
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> FETCH_HEAD
 	vTex.push( 0.0); 	// V0
 	vTex.push( 0.0);
 	vTex.push( 1.0);	// V1
@@ -116,6 +146,7 @@ function drawScene() {
 	gl.bindTexture(gl.TEXTURE_2D, videoTexture);
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoImage);
 	videoTexture.needsUpdate = false;
+<<<<<<< HEAD
 	
 	gl.uniform2f(shader.TextureSizeUniform, gl.viewportWidth, gl.viewportHeight);
 	
@@ -133,6 +164,11 @@ function drawScene() {
 	gl.uniform2f(shader.CenterUniform, centerX, centerY);
 
 	gl.uniform1i(shader.SamplerUniform, 0);
+=======
+
+
+    gl.uniform1i(shader.SamplerUniform, 0);
+>>>>>>> FETCH_HEAD
 	gl.enableVertexAttribArray(shader.vertexPositionAttribute);
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertPosBuf);
 	gl.vertexAttribPointer(shader.vertexPositionAttribute, vertPosBuf.itemSize, gl.FLOAT, false, 0, 0);
@@ -176,7 +212,10 @@ function webGLStart() {
 	
 	
 	canvas = document.getElementById("videoGL");
+<<<<<<< HEAD
 	canvas.addEventListener("click", getLocation, false);
+=======
+>>>>>>> FETCH_HEAD
 	gl = initGL(canvas);
 	
 	if (!gl) { 
@@ -193,12 +232,17 @@ function webGLStart() {
 	shader.vertexPositionAttribute 	= gl.getAttribLocation(shader, "aVertexPosition");
 	shader.vertexTextAttribute 		= gl.getAttribLocation(shader, "aVertexTexture");
 	shader.SamplerUniform	 		= gl.getUniformLocation(shader, "uSampler");
+<<<<<<< HEAD
 	shader.TextureSizeUniform		= gl.getUniformLocation(shader, "uTextureSize");
 	shader.CenterUniform			= gl.getUniformLocation(shader, "uCenter");
 	shader.RadiusUniform			= gl.getUniformLocation(shader, "uRadius");
 	shader.AngleUniform				= gl.getUniformLocation(shader, "uAngle");
 
 	if ( 	(shader.vertexPositionAttribute < 0) ||
+=======
+
+    if ( 	(shader.vertexPositionAttribute < 0) ||
+>>>>>>> FETCH_HEAD
 			(shader.vertexTextAttribute < 0) ||
 			(shader.SamplerUniform < 0) ) {
 		alert("Shader attribute ou uniform nao localizado!");
@@ -232,8 +276,12 @@ function render() {
 	drawScene();
 }
 
+<<<<<<< HEAD
 function getLocation(e) {
 	
 	centerX = e.x;
 	centerY = e.y;
 }
+=======
+
+>>>>>>> FETCH_HEAD
