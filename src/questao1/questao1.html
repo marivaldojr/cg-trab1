@@ -24,51 +24,26 @@
 
         uniform sampler2D uSampler;
 
+        varying vec2 vTextureCoord;
+
         uniform float lightness;
         uniform float saturation;
-<<<<<<< HEAD:src/videoCapture.html
+
         uniform float u_kernel[9];
         
         uniform vec2 uTextureSize;
-=======
+
         uniform float contrast;
         uniform float contrastC;
->>>>>>> FETCH_HEAD:src/questao1/questao1.html
-
-        varying vec2 vTextureCoord;
 
         vec3 rgbToHSL(vec3 corRGB);
         vec3 hslToRGB(vec3 corHSL);
         vec3 applyContrast(vec3 corRGB, float constant, float gamma);
+        vec4 applySharpen();
 
         void main(void) {
-			vec2 onePixel = vec2(1.0, 1.0) / uTextureSize;
-			
-            vec4 colorSum = texture2D(uSampler, vTextureCoord + onePixel * vec2(-1, -1)) * u_kernel[0] +
-							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 0, -1)) * u_kernel[1] +
-							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 1, -1)) * u_kernel[2] +
-							 texture2D(uSampler, vTextureCoord + onePixel * vec2(-1,  0)) * u_kernel[3] +
-							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 0,  0)) * u_kernel[4] +
-							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 1,  0)) * u_kernel[5] +
-							 texture2D(uSampler, vTextureCoord + onePixel * vec2(-1,  1)) * u_kernel[6] +
-							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 0,  1)) * u_kernel[7] +
-							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
 
-			float kernelWeight = u_kernel[0] +
-								 u_kernel[1] +
-								 u_kernel[2] +
-								 u_kernel[3] +
-								 u_kernel[4] +
-								 u_kernel[5] +
-								 u_kernel[6] +
-								 u_kernel[7] +
-								 u_kernel[8] ;
-
-		   if (kernelWeight <= 0.0) {
-			 kernelWeight = 1.0;
-		   }
-		   
-		   vec4 cor = colorSum;
+            vec4 cor = applySharpen();
 		   
             // cor RGB de 0..1
             vec3 corRGB = cor.rgb;
@@ -167,11 +142,42 @@
             return corRGB;
         }
 
+
+        vec4 applySharpen(){
+            vec2 onePixel = vec2(1.0, 1.0) / uTextureSize;
+
+            vec4 colorSum = texture2D(uSampler, vTextureCoord + onePixel * vec2(-1, -1)) * u_kernel[0] +
+							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 0, -1)) * u_kernel[1] +
+							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 1, -1)) * u_kernel[2] +
+							 texture2D(uSampler, vTextureCoord + onePixel * vec2(-1,  0)) * u_kernel[3] +
+							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 0,  0)) * u_kernel[4] +
+							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 1,  0)) * u_kernel[5] +
+							 texture2D(uSampler, vTextureCoord + onePixel * vec2(-1,  1)) * u_kernel[6] +
+							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 0,  1)) * u_kernel[7] +
+							 texture2D(uSampler, vTextureCoord + onePixel * vec2( 1,  1)) * u_kernel[8] ;
+
+			float kernelWeight = u_kernel[0] +
+								 u_kernel[1] +
+								 u_kernel[2] +
+								 u_kernel[3] +
+								 u_kernel[4] +
+								 u_kernel[5] +
+								 u_kernel[6] +
+								 u_kernel[7] +
+								 u_kernel[8] ;
+
+            if (kernelWeight <= 0.0) {
+                kernelWeight = 1.0;
+            }
+
+            return colorSum;
+
+        }
     </script>
 
     <script type="text/javascript" src="../../lib/webgl-utils.js"></script>
     <script type="text/javascript" src="../../lib/shaders.js"></script>
-    <script type="text/javascript" src="../questao1/questao1.js"></script>
+    <script type="text/javascript" src="questao1.js"></script>
 
 </head>
 
@@ -187,7 +193,7 @@
                     <li><a href='#'><span>Exemplo 2</span></a></li>
                 </ul>
             </li>
-            <li><a href='#'><span>Questão 3</span></a></li>
+            <li><a href='../questao3/questao3.html'><span>Questão 3</span></a></li>
             <li class='last'><a href='../questao4/questao4.html'><span>Questão 4</span></a></li>
         </ul>
     </div>
@@ -220,12 +226,12 @@
             <br />
             <label for="contrastC">c</label>
             <input type="number" id="contrastC" min="0" max="5" step="0.1" value="1">
-            <br/>
+            <br />
             
             <label for="nitidez" >Nitidez</label> <br />
             <input type="range" id="nitidez" min="0" max="10" step="1.0" value="0" oninput="this.form.nitidezOutput.value=this.value">
             <output name="nitidezOutput" for="rangeInput">0</output>
-            <br/>
+            <br />
         </form>
     </div>
 </body>
