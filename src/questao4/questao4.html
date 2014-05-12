@@ -1,0 +1,111 @@
+<html>
+
+<head>
+    <title>MATA65 - Computação Gráfica</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <link rel="stylesheet" type="text/css" href="../css/questao1.css" />
+    <link rel="stylesheet" type="text/css" href="../css/menu.css" />
+
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        attribute vec2 aVertexTexture;
+
+        varying vec2 vTextureCoord;
+
+        void main(void) {
+            gl_Position = vec4(aVertexPosition, 1.0);
+            vTextureCoord = aVertexTexture;
+        }
+    </script>
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+        precision mediump float;
+
+        uniform sampler2D uSampler;
+
+        uniform int flagVideo;
+        uniform float lightness;
+        uniform float saturation;
+
+        varying vec2 vTextureCoord;
+
+        vec3 rgbToHSL(vec3 corRGB);
+        vec3 hslToRGB(vec3 corHSL);
+
+        void main(void) {
+            vec4 cor = texture2D(uSampler, vTextureCoord);
+
+            // cor RGB de 0..1
+            vec3 corRGB = cor.rgb;
+
+            float cinzaMedio = 255.0 * (corRGB.r + corRGB.g + corRGB.b) / 3.0;
+
+            if (flagVideo == 0){
+                gl_FragColor = vec4(corRGB, 1.0);
+            }else if (flagVideo == 1){
+                if(cinzaMedio >= 0.0 && cinzaMedio < 32.0){
+                    corRGB = vec3(0.97, 0.51, 0.47);                // Congo pink
+                }else if(cinzaMedio >= 32.0 && cinzaMedio < 64.0){
+                    corRGB = vec3(1.0, 0.99, 0.82);                 // cream
+                }else if(cinzaMedio >= 32.0 && cinzaMedio < 96.0){
+                    corRGB = vec3(1.0, 1.0, 0.0);                   // amarelo
+                }else if(cinzaMedio >= 96.0 && cinzaMedio < 128.0){
+                    corRGB = vec3(0.0, 1.0, 1.0);                   // ciano
+                }else if(cinzaMedio >= 128.0 && cinzaMedio < 160.0){
+                    corRGB = vec3(1.0, 0.75, 0.8);                  // rosa
+                }else if(cinzaMedio >= 160.0 && cinzaMedio < 192.0){
+                    corRGB = vec3(0.0, 1.0, 1.0);                   // cyan
+                }else if(cinzaMedio >= 192.0 && cinzaMedio < 224.0){
+                    corRGB = vec3(0.31, 0.51, 0.71);                 // Cyan azure
+                }else if(cinzaMedio >= 224.0 && cinzaMedio < 256.0){
+                    corRGB = vec3(0.0, 0.66, 0.47);                 // Green (Munsell)
+                }
+                gl_FragColor = vec4(corRGB, 1.0);
+            }else if (flagVideo == 2){
+                cinzaMedio /= 255.0;
+                gl_FragColor = vec4(cinzaMedio, cinzaMedio, cinzaMedio, 1.0);
+            }else if (flagVideo == 3){
+                cinzaMedio /= 255.0;
+                gl_FragColor = vec4(cinzaMedio, cinzaMedio, cinzaMedio, 1.0);
+            }
+        }
+    </script>
+
+    <script type="text/javascript" src="../../lib/webgl-utils.js"></script>
+    <script type="text/javascript" src="../../lib/shaders.js"></script>
+    <script type="text/javascript" src="../questao4/questao4.js"></script>
+
+</head>
+
+<body onload="webGLStart();">
+
+    <div id='cssmenu'>
+        <ul>
+            <li><a href='../../index.html'><span>Home</span></a></li>
+            <li><a href='../questao1/questao1.html'><span>Questão 1</span></a></li>
+            <li class='has-sub'><a href='#'><span>Questão 2</span></a>
+                <ul>
+                    <li><a href='#'><span>Exemplo 1</span></a></li>
+                    <li><a href='#'><span>Exemplo 2</span></a></li>
+                </ul>
+            </li>
+            <li><a href='#'><span>Questão 3</span></a></li>
+            <li class='last active'><a href='../questao4/questao4.html'><span>Questão 4</span></a></li>
+        </ul>
+    </div>
+
+    <br />
+    <div id="output"> </div>
+    <br/>
+
+    <div id="content">
+        <div class="videos">
+            <canvas id="videoGL" width="640" height="480" style="visibility: visible;"></canvas>
+            <video id="monitor" autoplay width="320" height="240" style="visibility: hidden; display: none"></video>
+            <canvas id="videoImage" width="256" height="256" style="visibility: hidden; display: none"></canvas>
+        </div>
+    </div>
+</body>
+
+</html>

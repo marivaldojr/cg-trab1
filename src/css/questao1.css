@@ -12,3 +12,12 @@
 input {
     margin-top: 10px;
 }
+
+#contrastC {
+    width: 45px;
+    text-align: center;
+}
+
+#cssmenu ul{
+    z-index: 1;
+}
