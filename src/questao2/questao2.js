@@ -2,6 +2,8 @@ var vertPosBuf;
 var vertTextBuf;
 var gl;
 var shader;
+var centerX;
+var centerY;
 
 var video, videoImage, videoImageContext, videoTexture;
 
@@ -126,7 +128,9 @@ function drawScene() {
 	gl.uniform1f(shader.AngleUniform, angle);
 	
 	// Get center of image
-	gl.uniform2f(shader.CenterUniform, gl.viewportWidth/2, gl.viewportHeight/2);
+	//centerX = gl.viewportWidth/2;
+	//centerY = gl.viewportHeight/2;
+	gl.uniform2f(shader.CenterUniform, centerX, centerY);
 
 	gl.uniform1i(shader.SamplerUniform, 0);
 	gl.enableVertexAttribArray(shader.vertexPositionAttribute);
@@ -172,6 +176,7 @@ function webGLStart() {
 	
 	
 	canvas = document.getElementById("videoGL");
+	canvas.addEventListener("click", getLocation, false);
 	gl = initGL(canvas);
 	
 	if (!gl) { 
@@ -227,4 +232,8 @@ function render() {
 	drawScene();
 }
 
-
+function getLocation(e) {
+	
+	centerX = e.x;
+	centerY = e.y;
+}
