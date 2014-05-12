@@ -23,13 +23,13 @@
         precision mediump float;
 
         uniform sampler2D uSampler;
-<<<<<<< HEAD
         
         uniform float uRadius;
         uniform float uAngle;
         
         uniform vec2 uCenter;
         uniform vec2 uTextureSize;
+        uniform vec2 resolution;
 
         varying vec2 vTextureCoord;
 
@@ -53,24 +53,6 @@
 
             gl_FragColor = texture2D(uSampler, coord / uTextureSize);
         }
-=======
-
-        varying vec2 vTextureCoord;
-
-        uniform vec2 resolution;
-
-
-        void main(void) {
-            vec4 cor = texture2D(uSampler, vTextureCoord);
-
-            // cor RGB de 0..1
-            vec3 corRGB = cor.rgb;
-
-            gl_FragColor = vec4(corRGB, 1.0);
-        }
-
-
->>>>>>> FETCH_HEAD
     </script>
 
     <script type="text/javascript" src="../../lib/webgl-utils.js"></script>
@@ -85,11 +67,7 @@
         <ul>
             <li><a href='../../index.html'><span>Home</span></a></li>
             <li><a href='../questao1/questao1.html'><span>Questão 1</span></a></li>
-<<<<<<< HEAD
-            <li class='active'>	<a href='../questao2/questao2.html'><span>Questão 2</span></a></li>
-=======
             <li class='active'><a href='questao2.html'><span>Questão 2</span></a></li>
->>>>>>> FETCH_HEAD
             <li><a href='../questao3/questao3.html'><span>Questão 3</span></a></li>
             <li class='last'><a href='../questao4/questao4.html'><span>Questão 4</span></a></li>
         </ul>
@@ -105,8 +83,6 @@
             <video id="monitor" autoplay width="320" height="240" style="visibility: hidden; display: none"></video>
             <canvas id="videoImage" width="256" height="256" style="visibility: hidden; display: none"></canvas>
         </div>
-<<<<<<< HEAD
-        
         <form id="adjustments">
             <label for="angle">Angle</label> <br />
             <input type="range" id="angle" min="-25" max="25" step="1.0" value="0" oninput="this.form.angleOutput.value=this.value">
@@ -118,8 +94,6 @@
             <output name="radiusOutput" for="radius">0</output>
             <br/>
         </form>
-=======
->>>>>>> FETCH_HEAD
     </div>
 </body>
 
