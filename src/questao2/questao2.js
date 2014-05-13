@@ -2,6 +2,10 @@ var vertPosBuf;
 var vertTextBuf;
 var gl;
 var shader;
+var centerX;
+var centerY;
+var radius;
+var angle;
 
 var video, videoImage, videoImageContext, videoTexture;
 
@@ -135,17 +139,15 @@ function drawScene() {
 	gl.uniform2f(shader.TextureSizeUniform, gl.viewportWidth, gl.viewportHeight);
 	
 	// Get Raio
-	var radius = parseFloat(document.getElementById("radius").value);
+	radius = parseFloat(document.getElementById("radius").value);
 	gl.uniform1f(shader.RadiusUniform, radius);
 	
 	// Get Angle
-	var angle = parseFloat(document.getElementById("angle").value);
+	angle = parseFloat(document.getElementById("angle").value);
 	gl.uniform1f(shader.AngleUniform, angle);
 	
-	// Get center of image
-	//centerX = gl.viewportWidth/2;
-	//centerY = gl.viewportHeight/2;
-	gl.uniform2f(shader.CenterUniform, gl.viewportWidth/2, gl.viewportHeight/2);
+	// Get center of image	
+	gl.uniform2f(shader.CenterUniform, centerX, centerY);
 
 	gl.uniform1i(shader.SamplerUniform, 0);
 
@@ -193,7 +195,14 @@ function webGLStart() {
 	
 	canvas = document.getElementById("videoGL");
 	
-	canvas.addEventListener("click", getLocation, false);
+	// define center of distortion
+	centerX = canvas.width/2;
+	centerY = canvas.height/2;
+	
+	// add listeners
+	canvas.addEventListener("click", changeCenterWrapByClick, false);
+	radiusRange = document.getElementById('radius');
+	radiusRange.addEventListener("input", changeCenterWrapByRange, false);
 
 	gl = initGL(canvas);
 	
@@ -251,8 +260,55 @@ function render() {
 	drawScene();
 }
 
-function getLocation(e) {
+/*
+	Muda o centro da distorção.
+	Caso a posição distorça as bordas é recalculada uma nova posição válida.
+*/
+
+function changeCenterWrapByClick(e) {
 	
-	centerX = e.x;
-	centerY = e.y;
+	// get the click position
+	x = e.x - canvas.offsetLeft;
+	y = -((e.y - canvas.offsetTop) - canvas.height);
+	
+	// default center position
+	centerX = x;
+	centerY = y;
+	
+	if(radius > x){ // limite à esquerda
+		centerX = x + (radius - x);
+	}
+	if(radius > y) { // limite ao chão
+		centerY = y + (radius - y);
+	}		
+	if(radius > (canvas.width - x)) { // limite à direita
+		centerX -= radius - (canvas.width - x);
+	}
+	if(radius > (canvas.height - y)) { // limite ao topo
+		centerY -= radius - (canvas.height - y);
+	}
+}
+
+/*
+	Caso o novo raio ultrapasse os limites para distorcer as bordas
+	é calculada uma nova posição para o centro da distorção.
+*/
+
+function changeCenterWrapByRange(e) {
+	
+	// get the radius
+	radius = e.currentTarget.value;
+	
+	if(radius > centerX){ // limite à esquerda
+		centerX = centerX + (radius - centerX);
+	}
+	if(radius > centerY) { // limite ao chão
+		centerY = centerY + (radius - centerY);
+	}		
+	if(radius > (canvas.width - centerX)) { // limite à direita
+		centerX -= radius - (canvas.width - centerX);
+	}
+	if(radius > (canvas.height - centerY)) { // limite ao topo
+		centerY -= radius - (canvas.height - centerY);
+	}
 }

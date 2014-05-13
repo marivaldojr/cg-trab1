@@ -77,6 +77,8 @@
     <div id="output"> </div>
     <br/>
 
+	<h2>Distorção Wrap</h2>
+	
     <div id="content">
         <div class="videos">
             <canvas id="videoGL" width="320" height="240" style="visibility: visible;"></canvas>
@@ -85,13 +87,13 @@
         </div>
         <form id="adjustments">
             <label for="angle">Angle</label> <br />
-            <input type="range" id="angle" min="-25" max="25" step="1.0" value="0" oninput="this.form.angleOutput.value=this.value">
-            <output name="angleOutput" for="angle">0</output>
+            <input type="range" id="angle" min="-25" max="25" step="1.0" value="3" oninput="this.form.angleOutput.value=this.value">
+            <output name="angleOutput" for="angle">3</output>
             <br/>
 
             <label for="radius">Radius</label> <br />
-            <input type="range" id="radius" min="0" max="120" step="1.0" value="0" oninput="this.form.radiusOutput.value=this.value">
-            <output name="radiusOutput" for="radius">0</output>
+            <input type="range" id="radius" min="0" max="120" step="1.0" value="30" oninput="this.form.radiusOutput.value=this.value">
+            <output name="radiusOutput" for="radius">30</output>
             <br/>
         </form>
     </div>
