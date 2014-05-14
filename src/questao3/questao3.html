@@ -23,16 +23,15 @@
         precision mediump float;
 
         uniform sampler2D uSampler;
+        uniform sampler2D uSamplerImage;
 
         varying vec2 vTextureCoord;
 
         void main(void) {
             vec4 cor = texture2D(uSampler, vTextureCoord);
+            vec4 corImage = texture2D(uSamplerImage, vTextureCoord);
 
-            // cor RGB de 0..1
-            vec3 corRGB = cor.rgb;
-
-            gl_FragColor = vec4(corRGB, 1.0);
+            gl_FragColor = cor * corImage;
         }
     </script>
 
