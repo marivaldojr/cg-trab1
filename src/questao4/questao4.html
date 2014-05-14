@@ -43,78 +43,78 @@
 
             if (flagVideo == 0){
                 if(cinzaMedio >= 0.0 && cinzaMedio < 32.0){
-                    corRGB = vec3(0.97, 0.51, 0.47);                // Congo pink
+                    corRGB *= vec3(0.0, 0.66, 0.47);                 // Green (Munsell)
                 }else if(cinzaMedio >= 32.0 && cinzaMedio < 64.0){
-                    corRGB = vec3(0.6, 0.47, 0.48);                 // Bazaar
+                    corRGB *= vec3(0.6, 0.47, 0.48);                 // Bazaar
                 }else if(cinzaMedio >= 32.0 && cinzaMedio < 96.0){
-                    corRGB = vec3(0.0, 0.0, 1.0);                   // azul
+                    corRGB *= vec3(0.0, 0.0, 1.0);                   // azul
                 }else if(cinzaMedio >= 96.0 && cinzaMedio < 128.0){
-                    corRGB = vec3(0.0, 1.0, 1.0);                   // ciano
+                    corRGB *= vec3(0.0, 1.0, 1.0);                   // ciano
                 }else if(cinzaMedio >= 128.0 && cinzaMedio < 160.0){
-                    corRGB = vec3(1.0, 0.0, 0.0);                  // vermelho
+                    corRGB *= vec3(1.0, 0.0, 0.0);                  // vermelho
                 }else if(cinzaMedio >= 160.0 && cinzaMedio < 192.0){
-                    corRGB = vec3(0.0, 1.0, 1.0);                   // cyan
+                    corRGB *= vec3(0.0, 1.0, 1.0);                   // cyan
                 }else if(cinzaMedio >= 192.0 && cinzaMedio < 224.0){
-                    corRGB = vec3(0.31, 0.51, 0.71);                 // Cyan azure
+                    corRGB *= vec3(0.31, 0.51, 0.71);                 // Cyan azure
                 }else if(cinzaMedio >= 224.0 && cinzaMedio < 256.0){
-                    corRGB = vec3(0.0, 0.66, 0.47);                 // Green (Munsell)
+                    corRGB *= vec3(0.97, 0.51, 0.47);                // Congo pink
                 }
                 gl_FragColor = vec4(corRGB, 1.0);
             }else if (flagVideo == 1){
                 if(cinzaMedio >= 0.0 && cinzaMedio < 32.0){
-                    corRGB = vec3(0.97, 0.51, 0.47);                // Congo pink
+                    corRGB *= vec3(0.97, 0.51, 0.47);                // Congo pink
                 }else if(cinzaMedio >= 32.0 && cinzaMedio < 64.0){
-                    corRGB = vec3(1.0, 0.99, 0.82);                 // cream
+                    corRGB *= vec3(1.0, 0.99, 0.82);                 // cream
                 }else if(cinzaMedio >= 32.0 && cinzaMedio < 96.0){
-                    corRGB = vec3(1.0, 1.0, 0.0);                   // amarelo
+                    corRGB *= vec3(1.0, 1.0, 0.0);                   // amarelo
                 }else if(cinzaMedio >= 96.0 && cinzaMedio < 128.0){
-                    corRGB = vec3(0.0, 1.0, 1.0);                   // ciano
+                    corRGB *= vec3(0.0, 1.0, 1.0);                   // ciano
                 }else if(cinzaMedio >= 128.0 && cinzaMedio < 160.0){
-                    corRGB = vec3(1.0, 0.75, 0.8);                  // rosa
+                    corRGB *= vec3(1.0, 0.75, 0.8);                  // rosa
                 }else if(cinzaMedio >= 160.0 && cinzaMedio < 192.0){
-                    corRGB = vec3(0.0, 1.0, 1.0);                   // cyan
+                    corRGB *= vec3(0.0, 1.0, 1.0);                   // cyan
                 }else if(cinzaMedio >= 192.0 && cinzaMedio < 224.0){
-                    corRGB = vec3(0.31, 0.51, 0.71);                 // Cyan azure
+                    corRGB *= vec3(0.31, 0.51, 0.71);                 // Cyan azure
                 }else if(cinzaMedio >= 224.0 && cinzaMedio < 256.0){
-                    corRGB = vec3(0.0, 0.66, 0.47);                 // Green (Munsell)
+                    corRGB *= vec3(0.0, 0.66, 0.47);                 // Green (Munsell)
                 }
                 gl_FragColor = vec4(corRGB, 1.0);
             }else if (flagVideo == 2){
                 if(cinzaMedio >= 0.0 && cinzaMedio < 32.0){
-                    corRGB = vec3(1.0, 0.99, 0.82);                 // cream
+                    corRGB *= vec3(1.0, 0.99, 0.82);                 // cream
                 }else if(cinzaMedio >= 32.0 && cinzaMedio < 64.0){
-                    corRGB = vec3(1.0, 1.0, 0.0);                   // amarelo
+                    corRGB *= vec3(1.0, 1.0, 0.0);                   // amarelo
                 }else if(cinzaMedio >= 32.0 && cinzaMedio < 96.0){
-                    corRGB = vec3(0.0, 1.0, 0.2);                // verde
+                    corRGB *= vec3(0.0, 1.0, 0.2);                // verde
                 }else if(cinzaMedio >= 96.0 && cinzaMedio < 128.0){
-                    corRGB = vec3(1.0, 0.75, 0.8);                  // rosa
+                    corRGB *= vec3(1.0, 0.75, 0.8);                  // rosa
                 }else if(cinzaMedio >= 128.0 && cinzaMedio < 160.0){
-                    corRGB = vec3(0.31, 0.51, 0.71);                 // Cyan azure
+                    corRGB *= vec3(0.31, 0.51, 0.71);                 // Cyan azure
                 }else if(cinzaMedio >= 160.0 && cinzaMedio < 192.0){
-                    corRGB = vec3(0.0, 0.66, 0.47);                 // Green (Munsell)
+                    corRGB *= vec3(0.0, 0.66, 0.47);                 // Green (Munsell)
                 }else if(cinzaMedio >= 192.0 && cinzaMedio < 224.0){
-                    corRGB = vec3(0.0, 1.0, 1.0);                   // cyan
+                    corRGB *= vec3(0.0, 1.0, 1.0);                   // cyan
                 }else if(cinzaMedio >= 224.0 && cinzaMedio < 256.0){
-                    corRGB = vec3(0.0, 1.0, 1.0);                   // ciano
+                    corRGB *= vec3(0.0, 1.0, 1.0);                   // ciano
                 }
                 gl_FragColor = vec4(corRGB, 1.0);
             }else if (flagVideo == 3){
                 if(cinzaMedio >= 0.0 && cinzaMedio < 32.0){
-					corRGB = vec3(0.0, 1.0, 1.0);                   // ciano
+                    corRGB *= vec3(0.31, 0.51, 0.71);                 // Cyan azure
                 }else if(cinzaMedio >= 32.0 && cinzaMedio < 64.0){
-                	corRGB = vec3(1.0, 0.2, 0.0);                   // vermelho
+                    corRGB *= vec3(1.0, 0.2, 0.0);                   // vermelho
                 }else if(cinzaMedio >= 32.0 && cinzaMedio < 96.0){
-                    corRGB = vec3(1.0, 0.99, 0.82);                 // cream
+                    corRGB *= vec3(0.0, 1.0, 1.0);                   // ciano
                 }else if(cinzaMedio >= 96.0 && cinzaMedio < 128.0){
-                	corRGB = vec3(0.97, 0.51, 0.47);                // Congo pink
+                	corRGB *= vec3(0.97, 0.51, 0.47);                // Congo pink
                 }else if(cinzaMedio >= 128.0 && cinzaMedio < 160.0){
-					corRGB = vec3(1.0, 0.75, 0.8);                  // rosa
+					corRGB *= vec3(1.0, 0.75, 0.8);                  // rosa
                 }else if(cinzaMedio >= 160.0 && cinzaMedio < 192.0){
-					corRGB = vec3(0.31, 0.51, 0.71);                 // Cyan azure
+                    corRGB *= vec3(1.0, 0.99, 0.82);                 // cream
                 }else if(cinzaMedio >= 192.0 && cinzaMedio < 224.0){
-					corRGB = vec3(0.0, 0.66, 0.47);                 // Green (Munsell)
+					corRGB *= vec3(0.0, 0.66, 0.47);                 // Green (Munsell)
                 }else if(cinzaMedio >= 224.0 && cinzaMedio < 256.0){
-					corRGB = vec3(0.0, 1.0, 1.0);                   // cyan
+					corRGB *= vec3(0.0, 1.0, 1.0);                   // cyan
                 }
                 gl_FragColor = vec4(corRGB, 1.0);
             }

@@ -1,0 +1,35 @@
+.videos {
+    display: inline-block;
+}
+
+.adjustments{
+    display: inline-block;
+    position: absolute;
+    bottom: auto;
+    margin-left: 10px;
+}
+
+input {
+    margin-top: 10px;
+}
+
+#contrastC {
+    width: 45px;
+    text-align: center;
+}
+
+#cssmenu ul{
+    z-index: 1;
+}
+
+#content {
+    width: 100%;
+}
+
+.hslLabels {
+    color: #FFFFFF;
+    float: left;
+    font-size: 16px;
+    margin-left: 6px;
+    margin-top: 12px;
+}

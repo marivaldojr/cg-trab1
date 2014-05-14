@@ -4,8 +4,9 @@
     <title>MATA65 - Computação Gráfica</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-    <link rel="stylesheet" type="text/css" href="../css/questao1.css" />
+    <link rel="stylesheet" type="text/css" href="../css/questao3.css" />
     <link rel="stylesheet" type="text/css" href="../css/menu.css" />
+    <link rel="stylesheet" type="text/css" href="../hsl-picker-master/stylesheets/site.css" />
 
     <script id="shader-vs" type="x-shader/x-vertex">
         attribute vec3 aVertexPosition;
@@ -23,20 +24,123 @@
         precision mediump float;
 
         uniform sampler2D uSampler;
-
         uniform sampler2D uSamplerImage;
+
+        uniform float hue;
+        uniform float saturation;
+        uniform float lightness;
+
         varying vec2 vTextureCoord;
 
+        vec3 rgbToHSL(vec3 corRGB);
+        vec3 hslToRGB(vec3 corHSL);
+
         void main(void) {
-            vec4 cor = texture2D(uSampler, vTextureCoord);
+            vec4 corVideo = texture2D(uSampler, vTextureCoord);
             vec4 corImage = texture2D(uSamplerImage, vTextureCoord);
 
-            gl_FragColor = cor * corImage;
+            vec3 corVideoRGB = corVideo.rgb;
+            vec3 corVideoHSL = rgbToHSL(corVideoRGB);
+
+            if( corVideoHSL[0] == hue && corVideoHSL[1] == saturation && corVideoHSL[2] == lightness){
+                gl_FragColor = corImage;
+                return;
+            }
+
+            float intervalH = 40.0;
+            float intervalS = 50.0;
+            float intervalL = 50.0;
+
+            if( corVideoHSL[0] >= hue-intervalH && corVideoHSL[0] <= hue+intervalH &&
+                corVideoHSL[1] >= saturation-intervalS && corVideoHSL[1] <= saturation+intervalS &&
+                corVideoHSL[2] >= lightness-intervalL && corVideoHSL[2] <= lightness+intervalL){
+                gl_FragColor = corImage;
+            }else{
+                gl_FragColor = corVideo;
+            }
+        }
+
+        // Função de conversão do sistema RGB para HSL
+        vec3 rgbToHSL(vec3 corRGB){
+            vec3 corHSL;
+
+            float R = corRGB.r;
+            float G = corRGB.g;
+            float B = corRGB.b;
+
+            float corMax = max(max(R, G), B);
+            float corMin = min(min(R, G), B);
+
+            float delta = corMax - corMin;
+
+            // Hue
+            float H;
+            if(corMax == R){
+                H = 60.0 * mod((G - B)/delta, 6.0);
+            }else if(corMax == G){
+                H = 60.0 * ( ((B - R)/delta) + 2.0 );
+            }else if(corMax == B){
+                H = 60.0 * ( ((R - G)/delta) + 4.0 );
+            }
+
+            // Lightness
+            float L = (corMax + corMin) / 2.0;
+
+            // Saturation
+            float S;
+            if(delta == 0.0){
+                S = 0.0;
+            }else {
+                S = delta / (1.0 - abs((2.0 * L) - 1.0));
+            }
+
+            corHSL[0] = H;
+            corHSL[1] = S;
+            corHSL[2] = L;
+
+            return corHSL;
+        }
+
+		// Função de conversão de HSL para RGB
+        vec3 hslToRGB(vec3 corHSL){
+            vec3 corRGB;
+
+            float H = corHSL.x;
+            float S = corHSL.y;
+            float L = corHSL.z;
+
+            float C = (1.0 - abs((2.0 * L) - 1.0)) * S;
+
+            float X = C * (1.0 - abs(mod(H/60.0, 2.0) - 1.0) );
+
+            float m = L - (C / 2.0);
+
+            if(H >= 0.0 && H < 60.0){
+                corRGB = vec3(C, X, 0.0);
+            }else if(H >= 60.0 && H < 120.0){
+                corRGB = vec3(X, C, 0.0);
+            }else if(H >= 120.0 && H < 180.0){
+                corRGB = vec3(0.0, C, X);
+            }else if(H >= 180.0 && H < 240.0){
+                corRGB = vec3(0.0, X, C);
+            }else if(H >= 240.0 && H < 300.0){
+                corRGB = vec3(X, 0.0, C);
+            }else if(H >= 300.0 && H < 360.0){
+                corRGB = vec3(C, 0.0, X);
+            }
+
+            corRGB.r = corRGB.r + m;
+            corRGB.g = corRGB.g + m;
+            corRGB.b = corRGB.b + m;
+
+            return corRGB;
         }
     </script>
 
     <script type="text/javascript" src="../../lib/webgl-utils.js"></script>
     <script type="text/javascript" src="../../lib/shaders.js"></script>
+    <script type="text/javascript" src="../hsl-picker-master/javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="../hsl-picker-master/javascripts/hslpicker.js"></script>
     <script type="text/javascript" src="questao3.js"></script>
 
 </head>
@@ -63,7 +167,53 @@
             <video id="monitor" autoplay width="320" height="240" style="visibility: hidden; display: none"></video>
             <canvas id="videoImage" width="256" height="256" style="visibility: hidden; display: none"></canvas>
         </div>
+
+        <form class="adjustments" style="display: none">
+            <label for="hue">Hue</label> <br />
+            <input type="range" id="hue" min="0" max="360" step="1" value="360" oninput="this.form.hueOutput.value=this.value">
+            <output name="hueOutput" for="hue">360</output>
+            <br/>
+
+            <label for="saturation">Saturation</label> <br />
+            <input type="range" id="saturation" min="0" max="100" step="1" value="100" oninput="this.form.saturationOutput.value=this.value">
+            <output name="saturationOutput" for="saturation">0</output>
+            <br/>
+
+            <label for="lightness">Lightness</label> <br />
+            <input type="range" id="lightness" min="0" max="100" step="1" value="100" oninput="this.form.lightnessOutput.value=this.value">
+            <output name="lightnessOutput" for="lightness">100</output>
+            <br/>
+        </form>
+
+        <div id="hslpicker">
+            <div class="frame">
+                <div id='tiles' class='color-tiles exposed'>
+                    <div class='foreground tile selected' data-name='foreground' title='Adjust foreground tile'>
+                        <div class='foreground-color tile'></div>
+                    </div>
+                    <div class='background tile' data-name='background' title='Adjust background tile'>
+                        <div class='background-color tile'></div>
+                    </div>
+                    <div class='bgs'>
+                        <div class='bg none' title='Transparent' data-color='[360,100,100,0]' style="display: none"></div>
+                        <div class='bg light' title='White' data-color='[0,0,100,1]'></div>
+                        <div class='bg dark' title='Black' data-color='[0,0,0,1]'></div>
+                        <div class='bg random' title='Random' data-color='random'></div>
+                    </div>
+                </div>
+                <div id='picker' class='sliders'>
+                    <div class="slider"><div id='h-slider'><div class='handle'></div></div></div> <input id='h'><span class="hslLabels">H</span>
+                    <div class="slider"><div id='s-slider'><div class='handle'></div></div></div> <input id='s'><span class="hslLabels">S</span>
+                    <div class="slider"><div id='l-slider'><div class='handle'></div></div></div> <input id='l'><span class="hslLabels">L</span>
+                    <div class="slider" style="display: none"><div id='a-slider'><div class='handle'></div></div></div> <input id='a' style="display: none">
+                </div>
+            </div>
+        </div>
     </div>
 </body>
-
+<script type="text/javascript">
+    $(document).ready(function(){
+        site = require('site')();
+    })
+</script>
 </html>
