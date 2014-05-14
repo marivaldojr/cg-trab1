@@ -100,41 +100,6 @@
 
             return corHSL;
         }
-
-		// Função de conversão de HSL para RGB
-        vec3 hslToRGB(vec3 corHSL){
-            vec3 corRGB;
-
-            float H = corHSL.x;
-            float S = corHSL.y;
-            float L = corHSL.z;
-
-            float C = (1.0 - abs((2.0 * L) - 1.0)) * S;
-
-            float X = C * (1.0 - abs(mod(H/60.0, 2.0) - 1.0) );
-
-            float m = L - (C / 2.0);
-
-            if(H >= 0.0 && H < 60.0){
-                corRGB = vec3(C, X, 0.0);
-            }else if(H >= 60.0 && H < 120.0){
-                corRGB = vec3(X, C, 0.0);
-            }else if(H >= 120.0 && H < 180.0){
-                corRGB = vec3(0.0, C, X);
-            }else if(H >= 180.0 && H < 240.0){
-                corRGB = vec3(0.0, X, C);
-            }else if(H >= 240.0 && H < 300.0){
-                corRGB = vec3(X, 0.0, C);
-            }else if(H >= 300.0 && H < 360.0){
-                corRGB = vec3(C, 0.0, X);
-            }
-
-            corRGB.r = corRGB.r + m;
-            corRGB.g = corRGB.g + m;
-            corRGB.b = corRGB.b + m;
-
-            return corRGB;
-        }
     </script>
 
     <script type="text/javascript" src="../../lib/webgl-utils.js"></script>

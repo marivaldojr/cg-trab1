@@ -5,3 +5,13 @@
 li {
     margin-bottom: 10px;
 }
+
+#cabecalho > p{
+    font-size: large;
+    font-weight: bold;
+}
+
+#cabecalho p{
+    margin: 0px;
+    font-weight: bold;
+}
