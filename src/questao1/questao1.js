@@ -127,12 +127,12 @@ function drawScene() {
 	
 	// Nitidez
 	var a = parseFloat(document.getElementById('nitidez').value);
-	var edgeDetectKernel = [
+	var unsharpenKernel = [
 		0, -1*a, 0,
 		-1*a, 1 + 4*a, -1*a,
 		0, -1*a, 0
 	];
-	gl.uniform1fv(shader.KernelLocationUniform, edgeDetectKernel);
+	gl.uniform1fv(shader.KernelLocationUniform, unsharpenKernel);
 
     // Contrast
 	var contrast = parseFloat(document.getElementById('contrast').value);
@@ -212,10 +212,6 @@ function webGLStart() {
 
 	shader.FloatContrastUniform	    = gl.getUniformLocation(shader, "contrast");
 	shader.FloatContrastCUniform	= gl.getUniformLocation(shader, "contrastC");
-
-	shader.TextureSizeUniform		= gl.getUniformLocation(shader, "uTextureSize");
-	
-	shader.KernelLocationUniform	= gl.getUniformLocation(shader, "u_kernel[0]");
 
 	if ( 	(shader.vertexPositionAttribute < 0) ||
 			(shader.vertexTextAttribute < 0) ||

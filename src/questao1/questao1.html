@@ -60,6 +60,7 @@
             gl_FragColor = vec4(corRGB, 1.0);
         }
 
+		// Função de conversão do sistema RGB para HSL
         vec3 rgbToHSL(vec3 corRGB){
             vec3 corHSL;
 
@@ -100,6 +101,7 @@
             return corHSL;
         }
 
+		// Função de conversão de HSL para RGB
         vec3 hslToRGB(vec3 corHSL){
             vec3 corRGB;
 
@@ -133,7 +135,8 @@
 
             return corRGB;
         }
-
+	
+		// Função de ajuste de contraste da imagem
         vec3 applyContrast(vec3 corRGB, float constant, float gamma){
             corRGB.r = constant * pow(corRGB.r, gamma);
             corRGB.g = constant * pow(corRGB.g, gamma);
@@ -142,7 +145,7 @@
             return corRGB;
         }
 
-
+		// Função de aplicação do filtro de aguçamento (ajuste de nitidez)
         vec4 applySharpen(){
             vec2 onePixel = vec2(1.0, 1.0) / uTextureSize;
 
@@ -170,7 +173,7 @@
                 kernelWeight = 1.0;
             }
 
-            return colorSum;
+            return colorSum / kernelWeight;
 
         }
     </script>

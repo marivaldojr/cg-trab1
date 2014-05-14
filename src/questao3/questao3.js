@@ -116,6 +116,8 @@ function drawScene() {
 	videoTexture.needsUpdate = false;
 
 	gl.uniform1i(shader.SamplerUniform, 0);
+	gl.uniform1i(shader.SamplerBgUniform, 0);
+		
 	gl.enableVertexAttribArray(shader.vertexPositionAttribute);
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertPosBuf);
 	gl.vertexAttribPointer(shader.vertexPositionAttribute, vertPosBuf.itemSize, gl.FLOAT, false, 0, 0);
@@ -136,6 +138,23 @@ function initTexture(gl, shader) {
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 	videoTexture.needsUpdate = false;
+	
+	
+	// imagem
+	imagemTexture = gl.createTexture();
+	
+	var image = new Image();
+	image.onload = function(){	
+		
+		gl.bindTexture(gl.TEXTURE_2D, imagemTexture);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+	    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+	    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+		gl.bindTexture(gl.TEXTURE_2D, null);
+		
+		//drawScene(gl, shader);
+		}
+	image.src = "lena.png";
 }
 
 // ********************************************************
@@ -175,6 +194,7 @@ function webGLStart() {
 	shader.vertexPositionAttribute 	= gl.getAttribLocation(shader, "aVertexPosition");
 	shader.vertexTextAttribute 		= gl.getAttribLocation(shader, "aVertexTexture");
 	shader.SamplerUniform	 		= gl.getUniformLocation(shader, "uSampler");
+	shader.SamplerBgUniform	 		= gl.getUniformLocation(shader, "bgSampler");
 
 	if ( 	(shader.vertexPositionAttribute < 0) ||
 			(shader.vertexTextAttribute < 0) ||

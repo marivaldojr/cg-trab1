@@ -78,7 +78,7 @@
     <br/>
 
 	<h2>Distorção Wrap</h2>
-	<p>Clique na imagem para mudar o centro da distorção</p>
+	<p>Clique na imagem para mudar a origem da distorção</p>
 	
     <div id="content">
         <div class="videos">
@@ -87,12 +87,12 @@
             <canvas id="videoImage" width="256" height="256" style="visibility: hidden; display: none"></canvas>
         </div>
         <form id="adjustments">
-            <label for="angle">Angle</label> <br />
+            <label for="angle">Ângulo</label> <br />
             <input type="range" id="angle" min="-25" max="25" step="1.0" value="3" oninput="this.form.angleOutput.value=this.value">
             <output name="angleOutput" for="angle">3</output>
             <br/>
 
-            <label for="radius">Radius</label> <br />
+            <label for="radius">Raio</label> <br />
             <input type="range" id="radius" min="0" max="120" step="1.0" value="30" oninput="this.form.radiusOutput.value=this.value">
             <output name="radiusOutput" for="radius">30</output>
             <br/>
