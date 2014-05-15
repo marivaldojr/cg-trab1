@@ -47,13 +47,13 @@
                 return;
             }
 
-            float intervalH = 40.0;
-            float intervalS = 50.0;
-            float intervalL = 50.0;
+            float toleranciaH = 35.0;
+            float toleranciaS = 20.0;
+            float toleranciaL = 50.0;
 
-            if( corVideoHSL[0] >= hue-intervalH && corVideoHSL[0] <= hue+intervalH &&
-                corVideoHSL[1] >= saturation-intervalS && corVideoHSL[1] <= saturation+intervalS &&
-                corVideoHSL[2] >= lightness-intervalL && corVideoHSL[2] <= lightness+intervalL){
+            if( corVideoHSL[0] >= hue-toleranciaH && corVideoHSL[0] <= hue+toleranciaH &&
+                corVideoHSL[1] >= saturation-toleranciaS && corVideoHSL[1] <= saturation+toleranciaS &&
+                corVideoHSL[2] >= lightness-toleranciaL && corVideoHSL[2] <= lightness+toleranciaL){
                 gl_FragColor = corImage;
             }else{
                 gl_FragColor = corVideo;
